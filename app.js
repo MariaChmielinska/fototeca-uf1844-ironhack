@@ -32,35 +32,62 @@ app.get('/', (req, res) => {
 // Cuando nos hagan una petición GET a '/add-image-form' renderizamos 
 app.get('/add-image-form', (req, res) => {
     res.render('form', {
-        isImagePosted: undefined
+        isImagePosted: undefined,
+        errorMessage: undefined
     });
 });
 
 // Cuando nos hagan una petición POST a '/add-image-form' tenemos que recibir los datos del formulario y actualizar nuestra "base de datos"
 app.post('/add-image-form', (req, res) => {
     // todos los datos vienen en req.body
-    console.log(req.body);
+    console.log('REQUEST: ', req.body);
     
     // 1. Actualizar el array 'images' con la información de req.body
-    const { title } = req.body;
+    const { title, url } = req.body;
 
     // opción 1: totalmente válida
     //images.push(req.body); // [{title: 'Gato'}]
 
     // otra opción, 'sacar' los campos
-    images.push({
-        title
-    })
+    // images.push({
+    //     title
+    // })
 
     console.log('array de imagenes actualizado: ', images);
 
     // 3. Añadir los otros campos del formulario y sus validaciones
 
+    const titlePattern = /^[a-zA-Z0-9_]+$/;
+    const urlPattern =  /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+    if (!titlePattern.test(title)) {
+        // Render the form with an error message
+        return res.render('form', {
+            isImagePosted: false,
+            errorMessage: 'Invalid title. Only letters, numbers, and underscores are allowed.'
+        });
+    }
+
+    if (!urlPattern.test(url)){
+
+        return res.render('form',{
+            isImagePosted: false,
+            errorMessage: 'Invalid URL. Please enter a valid URL'
+        });
+    }
+    
+
+     images.push({
+        title,
+        url
+    })  
+      
+
     // 4julio: Tras insertar una imagen 'dejaremos' el formulario visible 
     //res.send('Datos recibidos');
     // Redirect es un método del objecto Response que permite 'redirigir' al cliente a un nuevo endpoint o vista
     res.render('form', {
-        isImagePosted: true
+        isImagePosted: true,
+        errorMessage: undefined
     });
 });
 
