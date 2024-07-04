@@ -8,6 +8,9 @@ const app = express();
 // Tenemos que usar un nuevo middleware para indicar a Express que queremos procesar peticiones de tipo POST
 app.use(express.urlencoded({ extended: true }));
 
+// Añadimos el middleware necesario para que el client puedo hacer peticiones GET a los recursos públicos de la carpeta 'public'
+app.use(express.static('public'));
+
 // Base de datos de imágenes
 const images = [];
 
@@ -21,12 +24,16 @@ app.use(morgan('tiny'));
 app.get('/', (req, res) => {
 
     // 2. Usar en el home.ejs el forEach para iterar por todas las imágenes de la variable 'images'. Mostrar de momento solo el título 
-    res.render('home');
+    res.render('home', {
+        images
+    });
 });
 
 // Cuando nos hagan una petición GET a '/add-image-form' renderizamos 
 app.get('/add-image-form', (req, res) => {
-    res.render('form');
+    res.render('form', {
+        isImagePosted: undefined
+    });
 });
 
 // Cuando nos hagan una petición POST a '/add-image-form' tenemos que recibir los datos del formulario y actualizar nuestra "base de datos"
@@ -42,13 +49,21 @@ app.post('/add-image-form', (req, res) => {
 
     // otra opción, 'sacar' los campos
     images.push({
-        title 
+        title
     })
-    console.log('array Images updtaed', images);
 
-    // 3. Añadir los otros campos del formulario y sus validaciones 
-    res.send('Datos recibidos');
+    console.log('array de imagenes actualizado: ', images);
+
+    // 3. Añadir los otros campos del formulario y sus validaciones
+
+    // 4julio: Tras insertar una imagen 'dejaremos' el formulario visible 
+    //res.send('Datos recibidos');
+    // Redirect es un método del objecto Response que permite 'redirigir' al cliente a un nuevo endpoint o vista
+    res.render('form', {
+        isImagePosted: true
+    });
 });
+
 
 // en el futuro es normal que tengamos endpoints como
 // app.get('/edit-image-form')
