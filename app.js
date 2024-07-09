@@ -43,7 +43,7 @@ app.post('/add-image-form', (req, res) => {
     console.log('REQUEST: ', req.body);
     
     // 1. Actualizar el array 'images' con la información de req.body
-    const { title, url } = req.body;
+    const { title, url, date } = req.body;
 
     // opción 1: totalmente válida
     //images.push(req.body); // [{title: 'Gato'}]
@@ -57,8 +57,8 @@ app.post('/add-image-form', (req, res) => {
 
     // 3. Añadir los otros campos del formulario y sus validaciones
 
-    const titlePattern = /^[a-zA-Z0-9_]+$/;
-    const urlPattern =  /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+    const titlePattern = /^[a-zA-Z0-9_\s]+$/;
+    const urlPattern =  /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
     if (!titlePattern.test(title)) {
         // Render the form with an error message
         return res.render('form', {
@@ -73,12 +73,18 @@ app.post('/add-image-form', (req, res) => {
             isImagePosted: false,
             errorMessage: 'Invalid URL. Please enter a valid URL'
         });
+    } else if (images.some(image => image.url === url)) {
+        return res.render('form',{
+            isImagePosted: false,
+            errorMessage: 'URL already exist. Please enter a new URL'
+        });
     }
     
 
      images.push({
         title,
-        url
+        url,
+        date
     })  
       
 

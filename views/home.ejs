@@ -21,7 +21,12 @@
                     <section class="grid">
                         <% for (const image of images) { %>
                             <article>
-                                <%= image.title %>
+                                                           
+                             <header><%= image.title.toUpperCase()%><br>
+                                <%= image.date %>
+                            </header>
+                           
+                            <div><img src="<%= image.url %>" alt="<%= image.title %>"></div>
                             </article>
                             <% } %>
                     </section>
