@@ -95,7 +95,29 @@ app.post('/add-image-form', (req, res) => {
         isImagePosted: true,
         errorMessage: undefined
     });
+    // GET request to render "/"
+
+app.get("/", async (req, res) => {
+
+    // sort images by date from most recent to oldest 
+  
+    images = images.sort((a , b) => new Date(a.date) - new Date(b.date));
+  
+    console.log('show sorted images', images)
+  
+    /*/ async 
+  
+    await addRgbToImages(images);
+  
+    res.render("home", {
+  
+      images /* 
+  
+    });*/
+  });
 });
+
+
 
 
 // en el futuro es normal que tengamos endpoints como
