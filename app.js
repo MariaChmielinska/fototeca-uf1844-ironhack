@@ -21,13 +21,12 @@ app.set('view engine', 'ejs');
 app.use(morgan('tiny'));
 
 // Cuando nos hagan una petición GET a '/' renderizamos la home.ejs
-app.get('/', (req, res) => {
+//app.get('/', (req, res) => {
 
     // 2. Usar en el home.ejs el forEach para iterar por todas las imágenes de la variable 'images'. Mostrar de momento solo el título 
-    res.render('home', {
-        images
-    });
-});
+   // res.render('home', {
+   //     images
+  
 
 // Cuando nos hagan una petición GET a '/add-image-form' renderizamos 
 app.get('/add-image-form', (req, res) => {
@@ -97,28 +96,24 @@ app.post('/add-image-form', (req, res) => {
     });
     // GET request to render "/"
 
-app.get("/", async (req, res) => {
 
-    // sort images by date from most recent to oldest 
-  
-    images = images.sort((a , b) => new Date(a.date) - new Date(b.date));
-  
-    console.log('show sorted images', images)
-  
-    /*/ async 
-  
-    await addRgbToImages(images);
-  
-    res.render("home", {
-  
-      images /* 
-  
-    });*/
-  });
 });
 
 
+app.get("/", (req, res) => {
 
+    // sort images by date from most recent to oldest 
+  
+    images.sort((a , b) => new Date(a.date) - new Date(b.date));
+  
+    console.log('show sorted images', images);
+  
+    res.render("home", {
+  
+      images 
+  
+    });
+  });
 
 // en el futuro es normal que tengamos endpoints como
 // app.get('/edit-image-form')
