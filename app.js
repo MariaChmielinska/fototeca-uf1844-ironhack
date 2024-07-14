@@ -1,6 +1,8 @@
 // importar módulos de terceros
 const express = require('express');
 const morgan = require('morgan');
+const ColorThief = require('colorthief');
+
 
 // creamos una instancia del servidor Express
 const app = express();
@@ -37,7 +39,7 @@ app.get('/add-image-form', (req, res) => {
 });
 
 // Cuando nos hagan una petición POST a '/add-image-form' tenemos que recibir los datos del formulario y actualizar nuestra "base de datos"
-app.post('/add-image-form', (req, res) => {
+app.post('/add-image-form', async (req, res) => {
     // todos los datos vienen en req.body
     console.log('REQUEST: ', req.body);
     
@@ -79,11 +81,13 @@ app.post('/add-image-form', (req, res) => {
         });
     }
     
+   const color = await getMainColor(url); 
 
      images.push({
         title,
         url,
-        date
+        date, 
+        color
     })  
       
 
@@ -117,6 +121,14 @@ app.get("/", (req, res) => {
 
 // en el futuro es normal que tengamos endpoints como
 // app.get('/edit-image-form')
+
+//Get Image main color
+const getMainColor = (async(imageUrl) => ColorThief.getColor(imageUrl)
+.then(color => { 
+    return color;
+})
+.catch(err => { console.log(err) }));
+
 
 app.listen(3000, (req, res) => {
     console.log("Servidor escuchando correctamente en el puerto 3000.")
