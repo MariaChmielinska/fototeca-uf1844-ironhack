@@ -4,6 +4,13 @@ const morgan = require('morgan');
 const ColorThief = require('colorthief');
 
 
+//prepare a variable to let render define the port, instead of defining it in app.listen at the bottom.
+//process.env.PORT for render
+//and 3000 for local use
+const PORT = process.env.PORT || 3000;
+
+console.log('Value of the PORT', process.env);
+
 // creamos una instancia del servidor Express
 const app = express();
 
@@ -130,6 +137,7 @@ const getMainColor = (async(imageUrl) => ColorThief.getColor(imageUrl)
 .catch(err => { console.log(err) }));
 
 
-app.listen(3000, (req, res) => {
-    console.log("Servidor escuchando correctamente en el puerto 3000.")
+
+app.listen(PORT, (req, res) => {
+    console.log("Servidor escuchando correctamente en el puerto" + PORT)
 });
